@@ -1,10 +1,32 @@
 const { getRandomWordSync, getRandomWord } = require('word-maker');
+const csv = require('fast-csv')
+const fs = require('fs')
+
+const getCsvStream = () => {
+  const csvStream = csv.createWriteStream({headers: true})
+  const writableStream = fs.createWriteStream(`./${new Date().getTime()}_log.csv`)
+  csvStream.pipe(writableStream)
+  return csvStream
+}
+
+getCsvStream().write({
+  test: 'test'
+})
+
 
 // 1. Print numbers from 1 to 100 to the console, but for each number also print a random word using the function `getRandomWordSync`.
 const app = {
   counter:1,
   until:100,
-  getStringToprint: (counter, word) => `${counter}: ${word ? word : getRandomWordSync({ withErrors: false })}`,
+  errorAlerdWord: 'Doh!',
+  getRandomWordSync: () => {
+    try {
+      return getRandomWordSync({ withErrors: true })
+    } catch (err) {
+      return app.errorAlerdWord
+    }
+  },
+  getStringToprint: (counter, word) => `${counter}: ${word}`,
   getWordByIndex: counter => {
     let newWord
     if (counter % 3 === 0 && counter % 5 === 0) {
@@ -18,14 +40,15 @@ const app = {
   },
   step1: () => {
     while(app.counter <= app.until) {
-      console.log(app.getStringToprint(app.counter, null));
+      let rundomWord = app.getRandomWordSync()
+      console.log(app.getStringToprint(app.counter, rundomWord));
       app.counter++
    }
   },
   step2: () => {
     while(app.counter <= app.until) {
-      let fizzBuzzWord = app.getWordByIndex(app.counter)
-      console.log(app.getStringToprint(app.counter, fizzBuzzWord));
+      let word = app.getWordByIndex(app.counter) || app.getRandomWordSync()
+      console.log(app.getStringToprint(app.counter, word));
       app.counter++
    }
   },
@@ -37,11 +60,22 @@ const app = {
           console.log('reject: ', reject);
         })
     }
+  },
+  step3_2: async function() {
+    for (; app.counter <= app.until; app.counter++) {
+        await getRandomWord({ withErrors: true }).then(randomWord => {
+          let word = app.getWordByIndex(app.counter) || randomWord
+          console.log(app.getStringToprint(app.counter, word))
+        }, () => {
+          console.log(app.getStringToprint(app.counter, app.errorAlerdWord))
+        })
+    }
   }
 }
 
-// app.step1()
+app.step1()
 // app.step2()
-app.step3_1()
+// app.step3_1()
+// app.step3_2()
 // YOUR CODE HERE
 
