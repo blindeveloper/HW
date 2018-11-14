@@ -9,10 +9,6 @@ const getCsvStream = () => {
   return csvStream
 }
 
-getCsvStream().write({
-  test: 'test'
-})
-
 
 // 1. Print numbers from 1 to 100 to the console, but for each number also print a random word using the function `getRandomWordSync`.
 const app = {
@@ -36,46 +32,66 @@ const app = {
     } else if (counter % 3 === 0) {
       newWord = 'Fizz'
     }
+
     return newWord
   },
   step1: () => {
+    const stream = getCsvStream()
     while(app.counter <= app.until) {
-      let rundomWord = app.getRandomWordSync()
-      console.log(app.getStringToprint(app.counter, rundomWord));
+      stream.write({
+        number: app.counter,
+        word: app.getRandomWordSync()
+      })
       app.counter++
    }
   },
   step2: () => {
+    const stream = getCsvStream()
     while(app.counter <= app.until) {
-      let word = app.getWordByIndex(app.counter) || app.getRandomWordSync()
-      console.log(app.getStringToprint(app.counter, word));
+      stream.write({
+        number: app.counter,
+        word: app.getWordByIndex(app.counter) || app.getRandomWordSync()
+      })
       app.counter++
    }
   },
   step3_1: async function() {
+    const stream = getCsvStream()
     for (; app.counter <= app.until; app.counter++) {
         await getRandomWord().then(randomWord => {
-          console.log(app.getStringToprint(app.counter, randomWord))
-        }, reject => {
-          console.log('reject: ', reject);
+          stream.write({
+            number: app.counter,
+            word: randomWord
+          })
+        }, () => {
+          stream.write({
+            number: app.counter,
+            word: app.errorAlerdWord
+          })
         })
     }
   },
   step3_2: async function() {
+    const stream = getCsvStream()
     for (; app.counter <= app.until; app.counter++) {
         await getRandomWord({ withErrors: true }).then(randomWord => {
-          let word = app.getWordByIndex(app.counter) || randomWord
-          console.log(app.getStringToprint(app.counter, word))
+          stream.write({
+            number: app.counter,
+            word: app.getWordByIndex(app.counter) || randomWord
+          })
         }, () => {
-          console.log(app.getStringToprint(app.counter, app.errorAlerdWord))
+          stream.write({
+            number: app.counter,
+            word: app.errorAlerdWord
+          })
         })
     }
   }
 }
 
-app.step1()
+// app.step1()
 // app.step2()
 // app.step3_1()
-// app.step3_2()
+app.step3_2()
 // YOUR CODE HERE
 
