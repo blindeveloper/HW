@@ -1,6 +1,20 @@
-const { step1, step2, step3_1, step3_2 } = require('../word-list-generator')
+const { getWordListSync, getWordListAsync } = require('../word-list-generator')
+const { POST } = require('../word-list-generator/resource')
 
-// step1()
-step2()
-// step3_1()
-// step3_2()
+
+// POST(getWordListSync(true), (err, data) => {
+//   if (err) throw err
+//   console.log(data);
+// })
+
+// getWordListAsync(true, body => {
+//   POST(body, (err, data) => {
+//     if (err) throw err
+//     console.log(data);
+//   })
+// })
+getWordListAsync(true, body => {
+  getWordListSync(true)
+})
+
+
