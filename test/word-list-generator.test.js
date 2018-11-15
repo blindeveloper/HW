@@ -60,7 +60,7 @@ describe('getWordListSync function with fizzbuzz mode ON', function() {
 
 
 
-xdescribe('getCsvStream function', function() {
+describe('getCsvStream function', function() {
   it('should return stream', function() {
     let stream = getCsvStream_private()
     assert.equal(stream.writable, true)

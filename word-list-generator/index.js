@@ -48,7 +48,8 @@ function getWordListSync(isFizzBuzzModeOn = false) {
     counter++
   }
 
-
+  counter = 0
+  stream.end()
   return body
 }
 
@@ -67,6 +68,8 @@ async function getWordListAsync(isFizzBuzzModeOn = false, cb) {
     })
   }
 
+  counter = 0
+  stream.end()
   cb(body)
 }
 
