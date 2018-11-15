@@ -40,13 +40,17 @@ function getWordListSync(isFizzBuzzModeOn = false) {
 
   while(counter <= 100) {
     let word = isFizzBuzzModeOn ? getWordByIndex(counter) || getWordSync() : getWordSync()
-    stream.write({number: counter, word: word})
-    body[counter] = word
+    setChanges(counter, word, stream, body)
     counter++
   }
 
   stream.end()
   return body
+}
+
+function setChanges(counter, word, stream, body) {
+  stream.write({number: counter, word: word})
+  body[counter] = word
 }
 
 async function getWordListAsync(isFizzBuzzModeOn = false, cb) {
@@ -56,12 +60,8 @@ async function getWordListAsync(isFizzBuzzModeOn = false, cb) {
   for (let counter = 1; counter <= 100; counter++) {
     await getRandomWord({ withErrors: false }).then(randomWord => {
       let word = isFizzBuzzModeOn ? getWordByIndex(counter) || randomWord : randomWord
-      stream.write({number: counter, word: word})
-      body[counter] = word
-    }, () => {
-      stream.write({number: counter, word: errorAlerdWord})
-      body[counter] = errorAlerdWord
-    })
+      setChanges(counter, word, stream, body)
+    }, () => setChanges(counter, errorAlerdWord, stream, body))
   }
 
   stream.end()

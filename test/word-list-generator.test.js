@@ -1,5 +1,6 @@
 const rewire = require("rewire")
-var assert = require('chai').assert
+const assert = require('chai').assert
+const expect = require('chai').expect
 
 const wordListGenerator_rewire = rewire('../word-list-generator')
 const getWordByIndex_private = wordListGenerator_rewire.__get__('getWordByIndex')
@@ -35,6 +36,16 @@ describe('getWordListAsync function with fizzbuzz mode ON', function() {
   it('should return FizzBuzz by number 15', function() {
     assert.equal(asyncList['15'], 'FizzBuzz')
   })
+
+  it('should return FizzBuzz by number 45', function() {
+    assert.equal(asyncList['45'], 'FizzBuzz')
+  })
+
+  it('should return any word not from list [FizzBuzz, Buzz, Fizz]', function() {
+    expect(asyncList['7']).to.not.equal('FizzBuzz')
+    expect(asyncList['7']).to.not.equal('Buzz')
+    expect(asyncList['7']).to.not.equal('Fizz')
+  })
 })
 
 describe('getWordListSync function with fizzbuzz mode ON', function() {
@@ -59,6 +70,12 @@ describe('getWordListSync function with fizzbuzz mode ON', function() {
   it('should return FizzBuzz by number 15', function() {
     assert.equal(syncList['15'], 'FizzBuzz')
   })
+
+  it('should return any word not from list [FizzBuzz, Buzz, Fizz]', function() {
+    expect(syncList['7']).to.not.equal('FizzBuzz')
+    expect(syncList['7']).to.not.equal('Buzz')
+    expect(syncList['7']).to.not.equal('Fizz')
+  })
 })
 
 describe('getCsvStream function', function() {
@@ -76,10 +93,11 @@ describe('getWordSync function', function() {
 })
 
 describe('POST function', function() {
-  it('should send data with no error', function(done) {
-    POST({a:'b'}, (err, data) => {
-      if (err) done(err)
-      else done(data)
+  it('should return same body in response[failed ? please check your proxy connection before fix]', function(done) {
+    let body = {a:'b'}
+    POST(body, (err, data) => {
+      assert.equal(data.json.a, body.a)
+      done()
     })
   })
 })
