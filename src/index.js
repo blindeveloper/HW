@@ -13,6 +13,3 @@ getWordListAsync(true, body => {
     console.log(data);
   })
 })
-
-
-

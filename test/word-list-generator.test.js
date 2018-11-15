@@ -7,6 +7,9 @@ const getWordSync_private = wordListGenerator_rewire.__get__('getWordSync')
 const getCsvStream_private = wordListGenerator_rewire.__get__('getCsvStream')
 
 const { getWordListSync, getWordListAsync } = require('../word-list-generator')
+const { POST } = require('../word-list-generator/resource')
+
+
 
 describe('getWordListAsync function with fizzbuzz mode ON', function() {
   let asyncList
@@ -58,8 +61,6 @@ describe('getWordListSync function with fizzbuzz mode ON', function() {
   })
 })
 
-
-
 describe('getCsvStream function', function() {
   it('should return stream', function() {
     let stream = getCsvStream_private()
@@ -71,6 +72,15 @@ describe('getWordSync function', function() {
   it('should return random word with the String type', function() {
     let randomWord = getWordSync_private(false)
     assert.typeOf(randomWord, 'string')
+  })
+})
+
+describe('POST function', function() {
+  it('should send data with no error', function(done) {
+    POST({a:'b'}, (err, data) => {
+      if (err) done(err)
+      else done(data)
+    })
   })
 })
 

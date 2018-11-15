@@ -3,9 +3,6 @@
 const { getRandomWordSync, getRandomWord } = require('word-maker')
 const csv = require('fast-csv')
 const fs = require('fs')
-
-let counter = 1
-const until = 100
 const errorAlerdWord = 'Doh!'
 
 function getCsvStream() {
@@ -39,16 +36,15 @@ function getWordByIndex(counter) {
 
 function getWordListSync(isFizzBuzzModeOn = false) {
   const stream = getCsvStream()
-  let body = {}
+  let body = {}, counter = 1
 
-  while(counter <= until) {
+  while(counter <= 100) {
     let word = isFizzBuzzModeOn ? getWordByIndex(counter) || getWordSync() : getWordSync()
     stream.write({number: counter, word: word})
     body[counter] = word
     counter++
   }
 
-  counter = 0
   stream.end()
   return body
 }
@@ -57,7 +53,7 @@ async function getWordListAsync(isFizzBuzzModeOn = false, cb) {
   const stream = getCsvStream()
   let body = {}
 
-  for (; counter <= until; counter++) {
+  for (let counter = 1; counter <= 100; counter++) {
     await getRandomWord({ withErrors: false }).then(randomWord => {
       let word = isFizzBuzzModeOn ? getWordByIndex(counter) || randomWord : randomWord
       stream.write({number: counter, word: word})
@@ -68,7 +64,6 @@ async function getWordListAsync(isFizzBuzzModeOn = false, cb) {
     })
   }
 
-  counter = 0
   stream.end()
   cb(body)
 }
