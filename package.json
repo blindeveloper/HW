@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "nyc mocha"
+    "test": "nyc mocha",
+    "doc": "./node_modules/.bin/jsdoc word-list-generator/index.js"
   },
   "author": "Phil Mander <philip@harver.com>",
   "license": "ISC",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "rewire": "^4.0.1"

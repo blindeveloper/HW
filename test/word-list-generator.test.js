@@ -12,13 +12,11 @@ const { POST } = require('../word-list-generator/resource')
 
 
 
-describe('getWordListAsync function with fizzbuzz mode ON', function() {
+describe('getWordListAsync function with fizzbuzz mode ON and error mode off', function() {
   let asyncList
 
   before(async () => {
-    await getWordListAsync(true, (body) => {
-      asyncList = body
-    })
+    await getWordListAsync(true, false, body => asyncList = body)
   })
 
   it('should return type object', function() {
@@ -48,12 +46,10 @@ describe('getWordListAsync function with fizzbuzz mode ON', function() {
   })
 })
 
-describe('getWordListSync function with fizzbuzz mode ON', function() {
+describe('getWordListSync function with fizzbuzz mode ON and error mode off', function() {
   let syncList
 
-  before(() => {
-    syncList = getWordListSync(true)
-  })
+  before(() => syncList = getWordListSync(true, false))
 
   it('should return type object', function() {
     assert.typeOf(syncList, 'object')
@@ -75,13 +71,6 @@ describe('getWordListSync function with fizzbuzz mode ON', function() {
     expect(syncList['7']).to.not.equal('FizzBuzz')
     expect(syncList['7']).to.not.equal('Buzz')
     expect(syncList['7']).to.not.equal('Fizz')
-  })
-})
-
-describe('getCsvStream function', function() {
-  it('should return stream', function() {
-    let stream = getCsvStream_private()
-    assert.equal(stream.writable, true)
   })
 })
 
@@ -112,7 +101,7 @@ describe('getWordByIndex function', function() {
   it('should return FizzBuzz when the value is multiples of 3 && 5', function() {
     assert.equal(getWordByIndex_private(15), 'FizzBuzz')
   })
-  it('should return undefined when the value is not multiples of 3 || 5 || 3 && 5', function() {
-    assert.equal(getWordByIndex_private(2), undefined)
+  it('should return empty sting when the value is not multiples of 3 || 5 || 3 && 5', function() {
+    assert.equal(getWordByIndex_private(2), '')
   })
 })
