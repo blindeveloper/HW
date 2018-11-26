@@ -1,12 +1,8 @@
-Harver JS Assessment
-============================
-
 ## Get started
 
 Set this repository up by running:
 
 ```
-cd /path/to/harver-js-test
 npm install
 ```
 
